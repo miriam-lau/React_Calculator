@@ -1,0 +1,28 @@
+.calculator-container {
+  border: 2px solid black;
+  border-radius: 10px;
+  padding: 50px;
+  width: 350px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 24px;
+}
+
+.calculator-display {
+  border: 1px solid black;
+  border-radius: 10px;
+  height: 80px;
+  margin: 0 10px 30px 10px ;
+}
+
+.button-row {
+  display: flex;
+}
+
+.button {
+  border: 1px solid black;
+  border-radius: 10px;
+  width: 30px;
+  padding: 23px 20px 17px 20px;
+  margin: 10px;
+  text-align: center;
+}
