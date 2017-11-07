@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Button from './button';
 
+// have a enum in another file and have that accessible to index and calculator button
 class CalculatorButtons extends Component {
   renderButton(i) {
     const BUTTONS = this.props.BUTTONS;
