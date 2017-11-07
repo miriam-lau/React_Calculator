@@ -1,5 +1,10 @@
 .app-container {
   text-align: center;
+  font-family: 'Orbitron', sans-serif;
+}
+
+h1 {
+  font-size: 40px;
 }
 
 .calculator-container {
@@ -7,7 +12,6 @@
   border-radius: 10px;
   padding: 50px;
   width: 350px;
-  font-family: 'Orbitron', sans-serif;
   font-size: 24px;
   background-color: lightgray;
   margin: auto;
@@ -45,11 +49,11 @@
 }
 
 .zero-button {
-  width: 125px;
+  width: 148px;
 }
 
 .button:hover {
-  background-color: gray;
+  background-color: #cccccc;
   cursor: pointer;
   transition: 0.3s;
 }

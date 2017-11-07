@@ -34,6 +34,7 @@ class App extends Component {
     }
   }
 
+  // should allow keyboard input
   handleClick(i) {
     console.log("HANDLE CLICK", i);
     let newDisplayValue = this.state.displayValue;
@@ -44,26 +45,45 @@ class App extends Component {
       return;
     }
 
-    // need to handle multiple operations
+    // what happens when there is a starting or trailing operation?
     if (i === '=') {
       let chars = this.state.displayValue.split("");
+      let sign = null;
       let startIndex = 0;
-      let result = null;
-      let num1 = null;
-      let num2 = null;
-      let operation = null;
+      let calculationSequence = [];
+      console.log("CHARS", chars);
       for (let i = 0; i < chars.length; i++) {
-        if (num1 === null && (chars[i] === '/' || chars[i] === 'x' ||
-            chars[i] === '-' || chars[i] === '+')) {
-          num1 = parseFloat(chars.slice(startIndex, i));
+        // need to handle negative numbers
+        let num = "";
+        let operation = null;
+        if (chars[i] === '/' || chars[i] === 'x' ||
+            chars[i] === '-' || chars[i] === '+') {
+          num = chars.slice(startIndex, i).join("");
           operation = chars[i];
           startIndex = i + 1;
+          calculationSequence.push (num, operation);
         }
       }
-      num2 = parseFloat(chars.slice(startIndex, chars.length));
-      result = this.calculateResult(num1, num2, operation);
 
-      newDisplayValue = result.toString();
+      calculationSequence.push(chars.slice(startIndex, startIndex.length).join(""));
+      console.log("CALCULATION SEQ", calculationSequence);
+
+      // should respect order of operations
+      // how to evaluate or algorithm math order of operations
+      let num1 = parseFloat(calculationSequence[0]);
+      let i = 1;
+      while (i < calculationSequence.length - 1) {
+        console.log("RESULT i", i);
+        let operation = calculationSequence[i];
+        let num2 = parseFloat(calculationSequence[i + 1]);
+        console.log("NUM2", num2);
+        let result = this.calculateResult(num1, num2, operation);
+        i += 2
+        num1 = result;
+      }
+
+      console.log("RESULT", num1);
+      newDisplayValue = num1.toString();
       this.setState({ displayValue: newDisplayValue });
     }
 
