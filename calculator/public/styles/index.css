@@ -1,3 +1,7 @@
+.app-container {
+  text-align: center;
+}
+
 .calculator-container {
   border: 2px solid black;
   border-radius: 10px;
@@ -5,24 +9,51 @@
   width: 350px;
   font-family: 'Orbitron', sans-serif;
   font-size: 24px;
+  background-color: lightgray;
+  margin: auto;
 }
 
 .calculator-display {
   border: 1px solid black;
   border-radius: 10px;
-  height: 80px;
+  background-color: white;
+  text-align: right;
+  padding: 25px 10px 23px 0;
   margin: 0 10px 30px 10px ;
+  height: 18px;
 }
 
 .button-row {
   display: flex;
 }
 
-.button {
+.button, .zero-button {
   border: 1px solid black;
   border-radius: 10px;
-  width: 30px;
-  padding: 23px 20px 17px 20px;
+  background-color: white;
+  width: 50px;
+  padding: 23px 10px 17px 10px;
   margin: 10px;
   text-align: center;
+  box-shadow: 2px 2px 2px 1px black;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.button:last-child {
+  background-color: #ffad33;
+}
+
+.zero-button {
+  width: 125px;
+}
+
+.button:hover {
+  background-color: gray;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.button:last-child:hover {
+  background-color: #ff9900;
 }

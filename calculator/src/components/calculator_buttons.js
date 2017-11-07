@@ -1,24 +1,16 @@
 import React, { Component } from 'react';
 import Button from './button';
 
-const BUTTONS = ['7', '8', '9', '/', '4', '5', '6', 'x', '1', '2', '3', '-',
-    '0', '.', '=', '+'];
-
 class CalculatorButtons extends Component {
   renderButton(i) {
+    const BUTTONS = this.props.BUTTONS;
     return(
       <Button
         index={ i }
         value={ BUTTONS[i] }
+        onClick={ this.props.onClick }
       />
     );
-  }
-
-  renderCalculatorRow(startIndex, endIndex) {
-    for (let i = startIndex; i <= endIndex; i++) {
-      this.renderButton(i, BUTTONS[i]);
-    }
-    // how to return with 3 buttons?
   }
 
   render() {
@@ -47,6 +39,11 @@ class CalculatorButtons extends Component {
           { this.renderButton(13) }
           { this.renderButton(14) }
           { this.renderButton(15) }
+        </div>
+        <div className="button-row">
+          { this.renderButton(16) }
+          { this.renderButton(17) }
+          { this.renderButton(18) }
         </div>
       </div>
     );
