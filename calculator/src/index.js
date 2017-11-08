@@ -2,44 +2,73 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import CalculatorButtons from './components/calculator_buttons';
 
-// have a enum in another file and have that accessible to index and calculator button
-const BUTTONS = ['AC', '+/-', '%', '/', '7', '8', '9', 'x', '4', '5', '6', '-',
-    '1', '2', '3', '+', '0', '.', '='];
+import { BUTTONS } from './buttons_enum';
 
-const OPERATIONS = {
-  ADD: '+',
-  SUBTRACT: '-',
-  MULTIPLY: 'x',
-  DIVIDE: '/'
-}
-
+  // should allow keyboard input
 class App extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { displayValue: ""}
+    this.state = { displayValue: "", isNeg: false }
   }
 
-  handleOperation(num1, num2, operation) {
-    switch (operation) {
-      case OPERATIONS.ADD:
-        return num1 + num2;
-      case OPERATIONS.SUBTRACT:
-        return num1 - num2;
-      case OPERATIONS.MULTIPLY:
-        return num1 * num2;
-      case OPERATIONS.DIVIDE:
-        return num1 / num2;
-      default:
-        return null;
+  /**
+    * Converts chars to floats or keep the char if it is an operation
+    * @param {array[char] chars}
+    * @return {array[float or char] calculationSequence}
+  */
+  getCalculationString(chars) {
+    let startIndex = 0;
+    let calculationSequence = [];
+
+    for (let i = 0; i < chars.length; i++) {
+      let num = "";
+      let operation = null;
+      if (chars[i] === BUTTONS.DIVIDE || chars[i] === BUTTONS.MULTIPLY ||
+          chars[i] === BUTTONS.SUBTRACT || chars[i] === BUTTONS.ADD) {
+        if (startIndex !== i) {
+          num = parseFloat(chars.slice(startIndex, i).join(""));
+        }
+        operation = chars[i];
+      } else if (chars[i] === BUTTONS.PERCENT) {
+        if (startIndex !== i) {
+          num = parseFloat(chars.slice(startIndex, i).join("")) / 100.00;
+        }
+      }
+
+      if (num !== "") {
+        calculationSequence.push(num);
+        startIndex = i + 1;
+      }
+
+      if (operation !== null) {
+        calculationSequence.push(operation);
+      }
     }
+
+    if (startIndex !== chars.length) {
+      calculationSequence.push(
+        parseFloat(chars.slice(startIndex, chars.length).join(""))
+      );
+    }
+
+    if (this.state.isNeg) {
+      calculationSequence[0] *= -1;
+    }
+
+    this.setState({ isNeg: false });
+    return calculationSequence;
   }
 
+  /**
+    * Calculates the result from the input array.
+    * @param {array[float or char] calculationSequence}
+    * @return {float num1}
+  */
   calculateResult(calculationSequence) {
     // handle division and multiplication first
     let i = 0;
     let arr = [];
-
     while (i < calculationSequence.length) {
       let num1 = calculationSequence[i];
 
@@ -49,93 +78,101 @@ class App extends Component {
       }
 
       let operation = calculationSequence[i + 1];
-      if (operation === '+' || operation === '-') {
+      if (operation === BUTTONS.ADD || operation === BUTTONS.SUBTRACT) {
         arr.push(num1, operation);
         i += 2;
         continue;
       }
 
       let num2 = calculationSequence[i + 2];
-
       calculationSequence[i + 2] = this.handleOperation(num1, num2, operation);
       i += 2;
     }
-
-    console.log("NEW CALC SEQ", arr);
 
     // handle addition and subtraction
     let num1 = arr[0];
     let operation = null;
     let num2 = null;
-
     for (let i = 1; i < arr.length; i++) {
-      if (arr[i] === '+' || arr[i] === '-') {
+      if (arr[i] === BUTTONS.ADD || arr[i] === BUTTONS.SUBTRACT) {
         operation = arr[i];
         continue;
       }
 
       num2 = arr[i];
-
       let result = this.handleOperation(num1, num2, operation);
       num1 = result;
     }
 
-    console.log("RESULT", num1);
     return num1;
   }
 
-  // should allow keyboard input
-  handleClick(i) {
-    console.log("HANDLE CLICK", i);
-    let newDisplayValue = this.state.displayValue;
+  /**
+    * Performs a math operation
+    * @param {float num1}
+    * @param {float num2}
+    * @param {char operation}
+    * @return {?float}
+  */
+  handleOperation(num1, num2, operation) {
+    switch (operation) {
+      case BUTTONS.ADD:
+        return num1 + num2;
+      case BUTTONS.SUBTRACT:
+        return num1 - num2;
+      case BUTTONS.MULTIPLY:
+        return num1 * num2;
+      case BUTTONS.DIVIDE:
+        return num1 / num2;
+      default:
+        return null;
+    }
+  }
 
-    if (i === 'AC') {
+  /**
+    * Handles on click of a button
+    * @param {@enum button}
+  */
+  handleClick(button) {
+    let newDisplayValue = this.state.displayValue;
+    if (this.state.displayValue === "Error") {
       newDisplayValue = "";
-      this.setState({ displayValue: newDisplayValue });
+    }
+
+    if (button === BUTTONS.SIGN) {
+      if (this.state.isNeg) {
+        this.setState({ isNeg: false })
+      } else {
+        this.setState({ isNeg: true })
+      }
       return;
     }
 
-    // what happens when there is a starting or trailing operation?
-    // write a unit test for calculate function
-    // formats display value in state
-    if (i !== '=') {
-      newDisplayValue += i.toString();
+    if (button === BUTTONS.CLEAR) {
+      newDisplayValue = "";
+      this.setState({ displayValue: newDisplayValue, isNeg: false });
+      return;
+    }
+
+    if (button !== BUTTONS.EQUAL) {
+      newDisplayValue += button.toString();
     } else {
       let chars = this.state.displayValue.split("");
 
-      let isNeg = false;
-      if (chars[0] === '-') {
-        isNeg === true;
-        chars = chars.slice(1);
+      // error handling if beginning or end of char Array has invalid chars
+      if (!Number.isInteger(parseInt(chars[0], 10)) ||
+          (chars[chars.length - 1] === BUTTONS.PERCENT &&
+              !Number.isInteger(parseInt(chars[chars.length - 2], 10))) ||
+          (chars[chars.length - 1] !== BUTTONS.PERCENT &&
+              !Number.isInteger(parseInt(chars[chars.length - 1], 10)))) {
+        this.setState({ displayValue: "Error", isNeg: false });
+        return;
       }
 
-      let startIndex = 0;
-      let calculationSequence = [];
-
-      for (let i = 0; i < chars.length; i++) {
-        // create toggle for +/-
-        // handle %
-        let num = "";
-        let operation = null;
-        if (chars[i] === '/' || chars[i] === 'x' ||
-        chars[i] === '-' || chars[i] === '+') {
-          num = parseFloat(chars.slice(startIndex, i).join(""));
-
-          if (isNeg) {
-            num *= -1;
-            isNeg = false;
-          }
-
-          operation = chars[i];
-          startIndex = i + 1;
-          calculationSequence.push(num, operation);
-        }
-      }
-
-      calculationSequence.push(parseFloat(chars.slice(startIndex, startIndex.length).join("")));
-      console.log("CALCULATION SEQ", calculationSequence);
-
-      newDisplayValue = this.calculateResult(calculationSequence).toString();
+      let calculationSequence = this.getCalculationString(chars);
+      newDisplayValue = calculationSequence.length > 2 ?
+          this.calculateResult(calculationSequence).toString() :
+          calculationSequence[0].toString();
     }
 
     this.setState({ displayValue: newDisplayValue });
@@ -147,10 +184,9 @@ class App extends Component {
         <h1>Basic Calculator</h1>
         <div className="calculator-container">
           <section className="calculator-display">
-            { this.state.displayValue }
+            { this.state.isNeg ? `-${this.state.displayValue}` : this.state.displayValue }
           </section>
           <CalculatorButtons
-            BUTTONS={ BUTTONS }
             onClick={ (i) => this.handleClick(i) }/>
         </div>
       </div>

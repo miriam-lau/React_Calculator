@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import Button from './button';
 
-// have a enum in another file and have that accessible to index and calculator button
+import { BUTTONS } from '../buttons_enum';
+
 class CalculatorButtons extends Component {
-  renderButton(i) {
-    const BUTTONS = this.props.BUTTONS;
+  /**
+    * Returns a Button Component
+    * @param {@enum button}
+  */
+  renderButton(button) {
     return(
       <Button
-        index={ i }
-        value={ BUTTONS[i] }
+        value={ button }
         onClick={ this.props.onClick }
       />
     );
@@ -18,33 +21,33 @@ class CalculatorButtons extends Component {
     return (
       <div>
         <div className="button-row">
-          { this.renderButton(0) }
-          { this.renderButton(1) }
-          { this.renderButton(2) }
-          { this.renderButton(3) }
+          { this.renderButton(BUTTONS.CLEAR) }
+          { this.renderButton(BUTTONS.SIGN) }
+          { this.renderButton(BUTTONS.PERCENT) }
+          { this.renderButton(BUTTONS.DIVIDE) }
         </div>
         <div className="button-row">
-          { this.renderButton(4) }
-          { this.renderButton(5) }
-          { this.renderButton(6) }
-          { this.renderButton(7) }
+          { this.renderButton(BUTTONS.SEVEN) }
+          { this.renderButton(BUTTONS.EIGHT) }
+          { this.renderButton(BUTTONS.NINE) }
+          { this.renderButton(BUTTONS.MULTIPLY) }
         </div>
         <div className="button-row">
-          { this.renderButton(8) }
-          { this.renderButton(9) }
-          { this.renderButton(10) }
-          { this.renderButton(11) }
+          { this.renderButton(BUTTONS.FOUR) }
+          { this.renderButton(BUTTONS.FIVE) }
+          { this.renderButton(BUTTONS.SIX) }
+          { this.renderButton(BUTTONS.SUBTRACT) }
         </div>
         <div className="button-row">
-          { this.renderButton(12) }
-          { this.renderButton(13) }
-          { this.renderButton(14) }
-          { this.renderButton(15) }
+          { this.renderButton(BUTTONS.ONE) }
+          { this.renderButton(BUTTONS.TWO) }
+          { this.renderButton(BUTTONS.THREE) }
+          { this.renderButton(BUTTONS.ADD) }
         </div>
         <div className="button-row">
-          { this.renderButton(16) }
-          { this.renderButton(17) }
-          { this.renderButton(18) }
+          { this.renderButton(BUTTONS.ZERO) }
+          { this.renderButton(BUTTONS.PERIOD) }
+          { this.renderButton(BUTTONS.EQUAL) }
         </div>
       </div>
     );
