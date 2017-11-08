@@ -6,7 +6,6 @@ html, body, input, h1 {
   text-align: inherit;
   text-decoration: inherit;
   color: inherit;
-  background: inherit;
 }
 
 .app-container {
@@ -25,7 +24,15 @@ h1 {
   padding: 50px;
   width: 350px;
   font-size: 24px;
-  background-color: lightgray;
+  background-color: lightgray; /* Old browsers */
+    background: -moz-linear-gradient(top, #c4c7ce 0%, #9498a1 24%, #cdd0d7 50%,
+      #74777c 79%, #6f7376 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, #c4c7ce 0%, #9498a1 24%, #cdd0d7 50%,
+      #74777c 79%, #6f7376 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(top, #c4c7ce 0%, #9498a1 24%, #cdd0d7 50%,
+      #74777c 79%, #6f7376 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c4c7ce',
+      endColorstr='#6f7376',GradientType=0 ); /* IE6-9 */
   margin: auto;
 }
 
@@ -66,7 +73,7 @@ h1 {
 }
 
 .button:hover {
-  background-color: #cccccc;
+  background-color: #fff8dc;
   cursor: pointer;
   transition: 0.3s;
 }
