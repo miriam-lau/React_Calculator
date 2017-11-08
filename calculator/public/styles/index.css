@@ -1,3 +1,14 @@
+html, body, input, h1 {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  text-align: inherit;
+  text-decoration: inherit;
+  color: inherit;
+  background: inherit;
+}
+
 .app-container {
   text-align: center;
   font-family: 'Orbitron', sans-serif;
@@ -5,6 +16,7 @@
 
 h1 {
   font-size: 40px;
+  padding: 50px;
 }
 
 .calculator-container {
@@ -21,8 +33,9 @@ h1 {
   border: 1px solid black;
   border-radius: 10px;
   background-color: white;
+  width: 309px;
   text-align: right;
-  padding: 25px 10px 23px 0;
+  padding: 25px 10px 23px 10px;
   margin: 0 10px 30px 10px ;
   height: 18px;
 }

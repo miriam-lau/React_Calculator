@@ -3,7 +3,7 @@ import Button from './button';
 
 import { BUTTONS } from '../buttons_enum';
 
-class CalculatorButtons extends Component {
+class ButtonBoard extends Component {
   /**
     * Returns a Button Component
     * @param {@enum button}
@@ -46,7 +46,7 @@ class CalculatorButtons extends Component {
         </div>
         <div className="button-row">
           { this.renderButton(BUTTONS.ZERO) }
-          { this.renderButton(BUTTONS.PERIOD) }
+          { this.renderButton(BUTTONS.DECIMAL_POINT) }
           { this.renderButton(BUTTONS.EQUAL) }
         </div>
       </div>
@@ -54,4 +54,4 @@ class CalculatorButtons extends Component {
   }
 }
 
-export default CalculatorButtons;
+export default ButtonBoard;

@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import CalculatorButtons from './components/calculator_buttons';
+import ButtonBoard from './components/button_board';
 
 import { BUTTONS } from './buttons_enum';
 
-  // should allow keyboard input
+/**
+  Array of valid key char codes.
+*/
+export const VALID_KEY_CHARCODES = ['%', '+', '-', '*', '/', '.', '0', '1', '2',
+    '3', '4', '5', '6', '7', '8', '9', "Shift", "Enter", "Backspace"];
+
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -13,7 +19,7 @@ class App extends Component {
   }
 
   /**
-    * Converts chars to floats or keep the char if it is an operation
+    * Converts chars to floats or keep the char if it is an operation.
     * @param {array[char] chars}
     * @return {array[float or char] calculationSequence}
   */
@@ -37,6 +43,7 @@ class App extends Component {
       }
 
       if (num !== "") {
+        // doing isNeg check here and then set State to false here does not work
         calculationSequence.push(num);
         startIndex = i + 1;
       }
@@ -56,6 +63,7 @@ class App extends Component {
       calculationSequence[0] *= -1;
     }
 
+    // set State here works.
     this.setState({ isNeg: false });
     return calculationSequence;
   }
@@ -108,7 +116,7 @@ class App extends Component {
   }
 
   /**
-    * Performs a math operation
+    * Performs a math operation.
     * @param {float num1}
     * @param {float num2}
     * @param {char operation}
@@ -127,6 +135,82 @@ class App extends Component {
       default:
         return null;
     }
+  }
+
+  /**
+    * Checks if there are invalid chars at the beginning or end of char Array.
+    * @param {array[char] chars}
+    * @return {boolean}
+  */
+  checkErrors(chars) {
+    if (!Number.isInteger(parseInt(chars[0], 10)) ||
+        (chars[chars.length - 1] === BUTTONS.PERCENT &&
+            !Number.isInteger(parseInt(chars[chars.length - 2], 10))) ||
+        (chars[chars.length - 1] !== BUTTONS.PERCENT &&
+            !Number.isInteger(parseInt(chars[chars.length - 1], 10)))) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+    * Handles keyboard input
+    * @param {event{char} key} char code for key
+  */
+  handleKeyPress(event) {
+    // console.log ("IN KEYBOARD PRESS KEYCODE", event.keyCode);
+    // console.log ("IN KEYBOARD PRESS CHARCODE", event.key);
+
+    let key = event.key;
+    let hasKey = false;
+    for (let i = 0; i < VALID_KEY_CHARCODES.length; i++) {
+      if (key === VALID_KEY_CHARCODES[i]) {
+        hasKey = true;
+        break;
+      }
+    }
+
+    if (!hasKey) {
+      this.setState({ displayValue: "Error", isNeg: false });
+      return;
+    }
+
+    let newDisplayValue = this.state.displayValue;
+
+    if (key === '*') {
+      key = 'x';
+    } else if (key === '-' && newDisplayValue === "") {
+      this.setState({ isNeg: true });
+      return;
+    } else if (key === "Shift") {
+      return;
+    } else if (key === "Backspace") {
+      newDisplayValue = "";
+      this.setState({ displayValue: newDisplayValue, isNeg: false });
+      return;
+    }
+
+    if (this.state.displayValue === "Error") {
+      newDisplayValue = "";
+    }
+
+    if (key !== "Enter") {
+      newDisplayValue += key.toString();
+    } else {
+      let chars = this.state.displayValue.split("");
+
+      if (this.checkErrors(chars)) {
+        this.setState({ displayValue: "Error", isNeg: false });
+        return;
+      }
+
+      let calculationSequence = this.getCalculationString(chars);
+      newDisplayValue = calculationSequence.length > 2 ?
+          this.calculateResult(calculationSequence).toString() :
+          calculationSequence[0].toString();
+    }
+
+    this.setState({ displayValue: newDisplayValue });
   }
 
   /**
@@ -159,12 +243,7 @@ class App extends Component {
     } else {
       let chars = this.state.displayValue.split("");
 
-      // error handling if beginning or end of char Array has invalid chars
-      if (!Number.isInteger(parseInt(chars[0], 10)) ||
-          (chars[chars.length - 1] === BUTTONS.PERCENT &&
-              !Number.isInteger(parseInt(chars[chars.length - 2], 10))) ||
-          (chars[chars.length - 1] !== BUTTONS.PERCENT &&
-              !Number.isInteger(parseInt(chars[chars.length - 1], 10)))) {
+      if (this.checkErrors(chars)) {
         this.setState({ displayValue: "Error", isNeg: false });
         return;
       }
@@ -183,10 +262,11 @@ class App extends Component {
       <div className="app-container">
         <h1>Basic Calculator</h1>
         <div className="calculator-container">
-          <section className="calculator-display">
-            { this.state.isNeg ? `-${this.state.displayValue}` : this.state.displayValue }
-          </section>
-          <CalculatorButtons
+          <input className="calculator-display"
+            onKeyUp={ event => this.handleKeyPress(event) }
+            value={ this.state.isNeg ? `-${this.state.displayValue}` : this.state.displayValue }
+          />
+          <ButtonBoard
             onClick={ (i) => this.handleClick(i) }/>
         </div>
       </div>

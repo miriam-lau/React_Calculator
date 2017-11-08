@@ -1,5 +1,5 @@
 /**
-  Enum of calculator buttons
+  Enum of calculator buttons.
 */
 export const BUTTONS = {
   CLEAR: 'AC',
@@ -10,7 +10,7 @@ export const BUTTONS = {
   MULTIPLY: 'x',
   DIVIDE: '/',
   EQUAL: '=',
-  PERIOD: '.',
+  DECIMAL_POINT: '.',
   ZERO: '0',
   ONE: '1',
   TWO: '2',
