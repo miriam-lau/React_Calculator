@@ -5,8 +5,8 @@ import { BUTTONS } from '../buttons_enum';
 
 class ButtonBoard extends Component {
   /**
-    * Returns a Button Component
-    * @param {@enum button}
+    * Returns a Button Component.
+    * @param {@enum} button
   */
   renderButton(button) {
     return(

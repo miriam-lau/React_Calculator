@@ -19,13 +19,13 @@ class App extends Component {
   }
 
   /**
-    * Converts chars to floats or keep the char if it is an operation.
-    * @param {array[char] chars}
-    * @return {array[float or char] calculationSequence}
+    * Converts chars to floats.
+    * @param {char[]} chars
+    * @return {Array.<float|char>} calculationSequence
   */
-  getCalculationString(chars) {
+  getCalculationSequence(chars) {
     let startIndex = 0;
-    let calculationSequence = [];
+    let sequence = [];
 
     for (let i = 0; i < chars.length; i++) {
       let num = "";
@@ -44,56 +44,56 @@ class App extends Component {
 
       if (num !== "") {
         // doing isNeg check here and then set State to false here does not work
-        calculationSequence.push(num);
+        sequence.push(num);
         startIndex = i + 1;
       }
 
       if (operation !== null) {
-        calculationSequence.push(operation);
+        sequence.push(operation);
       }
     }
 
     if (startIndex !== chars.length) {
-      calculationSequence.push(
+      sequence.push(
         parseFloat(chars.slice(startIndex, chars.length).join(""))
       );
     }
 
     if (this.state.isNeg) {
-      calculationSequence[0] *= -1;
+      sequence[0] *= -1;
     }
 
     // set State here works.
     this.setState({ isNeg: false });
-    return calculationSequence;
+    return sequence;
   }
 
   /**
-    * Calculates the result from the input array.
-    * @param {array[float or char] calculationSequence}
-    * @return {float num1}
+    * Calculates the result from the sequence.
+    * @param {Array.<float|char>} calculationSequence
+    * @return {float} num1
   */
-  calculateResult(calculationSequence) {
+  calculateResult(sequence) {
     // handle division and multiplication first
     let i = 0;
     let arr = [];
-    while (i < calculationSequence.length) {
-      let num1 = calculationSequence[i];
+    while (i < sequence.length) {
+      let num1 = sequence[i];
 
-      if (i === calculationSequence.length - 1) {
+      if (i === sequence.length - 1) {
         arr.push(num1);
         break;
       }
 
-      let operation = calculationSequence[i + 1];
+      let operation = sequence[i + 1];
       if (operation === BUTTONS.ADD || operation === BUTTONS.SUBTRACT) {
         arr.push(num1, operation);
         i += 2;
         continue;
       }
 
-      let num2 = calculationSequence[i + 2];
-      calculationSequence[i + 2] = this.handleOperation(num1, num2, operation);
+      let num2 = sequence[i + 2];
+      sequence[i + 2] = this.handleOperation(num1, num2, operation);
       i += 2;
     }
 
@@ -116,10 +116,10 @@ class App extends Component {
   }
 
   /**
-    * Performs a math operation.
-    * @param {float num1}
-    * @param {float num2}
-    * @param {char operation}
+    * Computes a math operation.
+    * @param {float} num1
+    * @param {float} num2
+    * @param {char} math operation
     * @return {?float}
   */
   handleOperation(num1, num2, operation) {
@@ -139,7 +139,7 @@ class App extends Component {
 
   /**
     * Checks if there are invalid chars at the beginning or end of char Array.
-    * @param {array[char] chars}
+    * @param {char[]} chars
     * @return {boolean}
   */
   checkErrors(chars) {
@@ -154,8 +154,8 @@ class App extends Component {
   }
 
   /**
-    * Handles keyboard input
-    * @param {event{char} key} char code for key
+    * Handles keyboard input.
+    * @param {event{char}} key - char code for key
   */
   handleKeyPress(event) {
     // console.log ("IN KEYBOARD PRESS KEYCODE", event.keyCode);
@@ -204,7 +204,7 @@ class App extends Component {
         return;
       }
 
-      let calculationSequence = this.getCalculationString(chars);
+      let calculationSequence = this.getCalculationSequence(chars);
       newDisplayValue = calculationSequence.length > 2 ?
           this.calculateResult(calculationSequence).toString() :
           calculationSequence[0].toString();
@@ -214,8 +214,8 @@ class App extends Component {
   }
 
   /**
-    * Handles on click of a button
-    * @param {@enum button}
+    * Handles the click event of a button.
+    * @param {@enum} button
   */
   handleClick(button) {
     let newDisplayValue = this.state.displayValue;
@@ -248,7 +248,7 @@ class App extends Component {
         return;
       }
 
-      let calculationSequence = this.getCalculationString(chars);
+      let calculationSequence = this.getCalculationSequence(chars);
       newDisplayValue = calculationSequence.length > 2 ?
           this.calculateResult(calculationSequence).toString() :
           calculationSequence[0].toString();
