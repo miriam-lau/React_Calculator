@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
 import Button from './button';
-
 import { BUTTONS } from '../buttons_enum';
 
 class ButtonBoard extends Component {
   /**
-    * Returns a Button Component.
-    * @param {@enum} button
-  */
+   * Returns a Button Component.
+   * @param {@enum} button
+   */
+  // onClick works with:
+  //  onClick={ this.props.onClick }
+  //  onClick={ (e) => this.props.onClick(e) }
+  // does not work with (error: cannot read property 'toString' of undefined):
+  //  onClick={ () => this.props.onClick() }
   renderButton(button) {
     return(
       <Button
         value={ button }
-        onClick={ this.props.onClick }
+        onClick={ (e) => this.props.onClick(e) }
       />
     );
   }

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import ButtonBoard from './components/button_board';
 
+import ButtonBoard from './components/button_board';
 import { BUTTONS } from './buttons_enum';
 
 /**
-  Array of valid key char codes.
-*/
-export const VALID_KEY_CHARCODES = ['%', '+', '-', '*', '/', '.', '0', '1', '2',
-    '3', '4', '5', '6', '7', '8', '9', "Shift", "Enter", "Backspace"];
+ *Array of valid key char codes.
+ */
+const VALID_KEY_CHARCODES = ['%', '+', '-', '*', '/', '.', '0', '1', '2', '3',
+    '4', '5', '6', '7', '8', '9', "Shift", "Enter", "Backspace"];
 
 
 class App extends Component {
@@ -19,10 +19,10 @@ class App extends Component {
   }
 
   /**
-    * Converts chars to floats.
-    * @param {char[]} chars
-    * @return {Array.<float|char>} calculationSequence
-  */
+   * Converts chars to floats.
+   * @param {char[]} chars
+   * @return {Array.<float|char>} calculationSequence
+   */
   getCalculationSequence(chars) {
     let startIndex = 0;
     let sequence = [];
@@ -43,7 +43,7 @@ class App extends Component {
       }
 
       if (num !== "") {
-        // doing isNeg check here and then set State to false here does not work
+        // Doing isNeg check here and then set state to false here does not work
         sequence.push(num);
         startIndex = i + 1;
       }
@@ -63,18 +63,18 @@ class App extends Component {
       sequence[0] *= -1;
     }
 
-    // set State here works.
+    // Set state here works.
     this.setState({ isNeg: false });
     return sequence;
   }
 
   /**
-    * Calculates the result from the sequence.
-    * @param {Array.<float|char>} calculationSequence
-    * @return {float} num1
-  */
+   * Calculates the result from the sequence.
+   * @param {Array.<float|char>} calculationSequence
+   * @return {float} num1
+   */
   calculateResult(sequence) {
-    // handle division and multiplication first
+    // Handle division and multiplication first
     let i = 0;
     let arr = [];
     while (i < sequence.length) {
@@ -97,7 +97,7 @@ class App extends Component {
       i += 2;
     }
 
-    // handle addition and subtraction
+    // Handle addition and subtraction
     let num1 = arr[0];
     let operation = null;
     let num2 = null;
@@ -116,12 +116,12 @@ class App extends Component {
   }
 
   /**
-    * Computes a math operation.
-    * @param {float} num1
-    * @param {float} num2
-    * @param {char} math operation
-    * @return {?float}
-  */
+   * Computes a math operation.
+   * @param {float} num1
+   * @param {float} num2
+   * @param {char} math operation
+   * @return {?float}
+   */
   handleOperation(num1, num2, operation) {
     switch (operation) {
       case BUTTONS.ADD:
@@ -138,10 +138,10 @@ class App extends Component {
   }
 
   /**
-    * Checks if there are invalid chars at the beginning or end of char Array.
-    * @param {char[]} chars
-    * @return {boolean}
-  */
+   * Checks if there are invalid chars at the beginning or end of char Array.
+   * @param {char[]} chars
+   * @return {boolean}
+   */
   checkErrors(chars) {
     if (!Number.isInteger(parseInt(chars[0], 10)) ||
         (chars[chars.length - 1] === BUTTONS.PERCENT &&
@@ -154,13 +154,10 @@ class App extends Component {
   }
 
   /**
-    * Handles keyboard input.
-    * @param {event{char}} key - char code for key
-  */
+   * Handles keyboard input.
+   * @param {event{char}} key - char code for key
+   */
   handleKeyPress(event) {
-    // console.log ("IN KEYBOARD PRESS KEYCODE", event.keyCode);
-    // console.log ("IN KEYBOARD PRESS CHARCODE", event.key);
-
     let key = event.key;
     let hasKey = false;
     for (let i = 0; i < VALID_KEY_CHARCODES.length; i++) {
@@ -214,9 +211,9 @@ class App extends Component {
   }
 
   /**
-    * Handles the click event of a button.
-    * @param {@enum} button
-  */
+   * Handles the click event of a button.
+   * @param {@enum} button
+   */
   handleClick(button) {
     let newDisplayValue = this.state.displayValue;
     if (this.state.displayValue === "Error") {
@@ -264,7 +261,8 @@ class App extends Component {
         <div className="calculator-container">
           <input className="calculator-display"
             onKeyUp={ event => this.handleKeyPress(event) }
-            value={ this.state.isNeg ? `-${this.state.displayValue}` : this.state.displayValue }
+            value={ this.state.isNeg ?
+                `-${this.state.displayValue}` : this.state.displayValue }
           />
           <ButtonBoard
             onClick={ (i) => this.handleClick(i) }/>

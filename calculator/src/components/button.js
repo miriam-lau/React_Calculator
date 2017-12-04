@@ -7,6 +7,9 @@ const Button = (props) => {
   }
   return (
     // why need an callback for the onClick function?
+    // either need a callback, or pass in button in ButtonBoard, then:
+    //  in ButtonBoard: onClick={ (e) => this.props.onClick(button) }
+    //  in Button: onClick={ props.onClick }
     <div className={"button " + zeroClassName}
         onClick={ () => props.onClick(props.value) }>
       {props.value}
